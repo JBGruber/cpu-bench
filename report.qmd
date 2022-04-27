@@ -17,7 +17,7 @@ data %>%
   select(-session) %>% 
   pivot_longer(cols = -cpu, names_to = "step", values_to = "time") %>% 
   ggplot(aes(x = step, y = as.integer(time), fill = cpu)) +
-  geom_col() +
+  geom_col(position = "dodge") +
   facet_wrap(vars(step), scales = "free") +
   labs(y = "seconds", x = NULL)
 ```

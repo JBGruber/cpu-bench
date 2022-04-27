@@ -1,0 +1,23 @@
+---
+title: "bench report"
+format: html
+---
+
+```{r setup}
+#| include=FALSE
+knitr::opts_chunk$set(echo = TRUE, dev = "svg")
+library(tidyverse)
+data <- readRDS("bench_results.rds")
+```
+
+## Plot
+
+```{r }
+data %>% 
+  select(-session) %>% 
+  pivot_longer(cols = -cpu, names_to = "step", values_to = "time") %>% 
+  ggplot(aes(x = step, y = as.integer(time), fill = cpu)) +
+  geom_col() +
+  facet_wrap(vars(step), scales = "free") +
+  labs(y = "seconds", x = NULL)
+```

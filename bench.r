@@ -1,4 +1,5 @@
 ### setup
+library(tidyverse)
 library(quanteda)
 library(stm)
 library(furrr)
@@ -32,7 +33,6 @@ many_models <- data_frame(K = seq(40, 60, 5)) %>%
 time <- c(time, stm_multi = Sys.time())
 
 ### report
-library(tidyverse)
 tibble(
   stage = names(time),
   time_stamp = time
@@ -42,7 +42,8 @@ tibble(
   drop_na(time) %>% 
   select(stage, time) %>% 
   pivot_wider(names_from = "stage", values_from = "time") %>% 
-  mutate(session = list(sessionInfo())) %>% 
+  mutate(cpu = gsub("model name\t: ", "", unique(system("awk '/model name/' /proc/cpuinfo", intern = TRUE))),
+         session = list(sessionInfo())) %>% 
   {
     if (file.exists("bench_results.rds")) {
       bind_rows(readRDS("bench_results.rds"), .)
